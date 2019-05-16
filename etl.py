@@ -6,6 +6,17 @@ from sql_queries import *
 
 
 def process_song_file(cur, filepath):
+    """
+    This function processes a song file whose filepath has been provided as an arugment.
+    It extracts the song information in order to store it into the songs table.
+    Then it extracts the artist information in order to store it into the artists table.
+    
+    Args:
+        cur (:obj:`cursor`): The cursor variable.
+        filepath (str): The file path to the song file
+
+    """
+        
     # open song file
     df = pd.read_json(filepath, lines=True)
 
@@ -19,6 +30,18 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
+    """
+    This function processes a log file whose filepath has been provided as an arugment.
+    It extracts the time information in order to store it into the time table.
+    Then it extracts the users information in order to store it into the users table.
+    Finally it extracts the songs played by users in order to store it into the songplay table.
+    
+    Args:
+        cur (:obj:`cursor`): The cursor variable.
+        filepath (str): The file path to the log file
+
+    """
+        
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -70,6 +93,20 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    This a generic function that processes a set of files stored in the filepath provided as an arugment.
+    It iterates over them and run the function "func" also provided as an argument to read the information from JSON files and store them in the appropriate tables.
+    
+    Args:
+        cur (:obj:`cursor`): One object of the class cursor. 
+            It allows the execution of PostgreSQL commands in a database session. 
+            All the commands are executed in the context of the database session wrapped by the connection.
+        conn (:obj:`connection`): One object of the class connection that encapsulates a database session. 
+            It handles the connection to a PostgreSQL database instance.
+        filepath (str): The path to the directory to be scanned by the function. 
+        func (str): Name of the function to be used when processing the JSON files.
+
+    """
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -89,6 +126,9 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
+    """
+    The main function. It connects to the database and processes the files in order to populate the tables.
+    """
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
 
